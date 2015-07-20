@@ -15,6 +15,20 @@ import ConfigParser
 from optparse import OptionParser
 import sys
 import os
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'DjangoREST.settings')
+import django
+django.setup()
+
+from portal.models import Sensors, SensorData
+
+import sleekxmpp
+from sleekxmpp.xmlstream import ET, tostring
+
+if sys.version_info < (3, 0):
+    from sleekxmpp.util.misc_ops import setdefaultencoding
+    setdefaultencoding('utf8')
+else:
+    raw_input = input
 
 
 
@@ -64,7 +78,8 @@ class PortalXMPP(ClientXMPP):
         self.connection = sqlite3.connect(self.DB_path)
         self.cursor = self.connection.cursor()
 
-        self.cursor.execute("SELECT sensor_type FROM portal_sensors")
+        #self.cursor.execute("SELECT sensor_type FROM portal_sensors")
+	sensor_type.objects.all().values_list('portal_sensors')
         sensor_types = self.cursor.fetchall()
 
         s = ''
@@ -117,7 +132,8 @@ class PortalXMPP(ClientXMPP):
 
             # Fetching the id of the sensor_type with the name = s_sensor_type_name if it exists in the database
             if found_in_cache == 0:
-                self.cursor.execute("SELECT id FROM portal_sensors WHERE sensor_type='"+s_sensor_type_name+"'")
+                #self.cursor.execute("SELECT id FROM portal_sensors WHERE sensor_type='"+s_sensor_type_name+"'")
+		sensor_type.objects.filter(sensor_type=s_sensor_type_name)
                 sensor_type = self.cursor.fetchone()
                 if str(sensor_type) != 'None':
                     sensor_type = sensor_type[0]
@@ -138,8 +154,12 @@ class PortalXMPP(ClientXMPP):
                       "VALUES ( " + s_sensor_type + ", " + s_value + ", " + s_time+")")
 
                 # Adding the received sensor data to the appropriate table
-                self.cursor.execute("INSERT INTO portal_sensordata (sensor_id, value, timestamp)"
-                                    "VALUES ( " + s_sensor_type + ", " + s_value + ", " + s_time+")")
+                #self.cursor.execute("INSERT INTO portal_sensordata (sensor_id, value, timestamp)"
+                #                    "VALUES ( " + s_sensor_type + ", " + s_value + ", " + s_time+")")
+
+		sensordata= SensorData(sensor_id=s_sensor_type, value=s_value, timestamp=s_time)
+ 		sensordata.save()
+
                 self.connection.commit()
 
                 print("Commited")
