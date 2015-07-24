@@ -1,0 +1,16 @@
+ [
+   {  
+    "model": "portal.PermissionType",
+    "fields": {
+      "id": "1",
+      "name": "read"
+       }
+    },
+     {
+    "model": "portal.PermissionType",
+    "fields": {
+      "id": "2",
+      "name": "write"
+    }
+   }
+]
