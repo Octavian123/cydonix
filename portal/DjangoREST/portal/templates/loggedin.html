@@ -1,0 +1,19 @@
+{% block content %}
+<head>
+     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+</head>
+<body style="margin-top: 0px">
+<div align="center" style="background-color: #BDBDBD">
+  <h2>You are now logged in as:   {{full_name}} </h2>
+
+</div>
+
+<div align="center" style="background-color: #BDBDBD">
+  <a href="/portal/"><button type="button" class="btn btn-success">Portal</button></a>
+  <a href="/accounts/logout"><button type="button" class="btn btn-success">Logout</button></a>
+</div>
+
+
+</body>  
+
+{% endblock %}
